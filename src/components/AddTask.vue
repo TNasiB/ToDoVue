@@ -18,7 +18,10 @@
                 let title = document.querySelector(".task-title"),
                     desc = document.querySelector(".task-desc")
 
-                this.$emit('add-task', {title: title.value, desc: desc.value});
+                this.$emit('add-task', {
+                    title: title.value,
+                    desc: desc.value
+                });
             }
         }
     }
