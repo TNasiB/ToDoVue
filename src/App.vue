@@ -1,19 +1,21 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+    <AddTask @add-task="saveNewTask"></AddTask>
+    <CardTable></CardTable>
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+  import AddTask from "./components/AddTask.vue";
+  import CardTable from "./components/CardsTable.vue"
 
-export default {
-  name: 'App',
-  components: {
-    HelloWorld
+  export default {
+    name: 'App',
+    components: {
+      AddTask,
+      CardTable,
+    },
   }
-}
 </script>
 
 <style>
@@ -24,5 +26,8 @@ export default {
   text-align: center;
   color: #2c3e50;
   margin-top: 60px;
+}
+button {
+  cursor: pointer;
 }
 </style>
