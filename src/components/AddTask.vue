@@ -2,13 +2,25 @@
     <div class="new-task">
         <p class="input-name">Todo list on Vue.js</p>
         <p class="title-name">Title</p>
+
         <input type="text" class="task-title" v-on:keyup.enter="addTask">
+
+        <span class="validation hide">Please, enter title of task</span>
         <p class="desc-name">Description</p>
+
         <input type="text" class="task-desc" v-on:keyup.enter="addTask">
+
         <button 
         v-on:click="addTask()" 
-        class="add-task">Add task</button>
-        <button v-on:click="removeAllTasks" class="remove-tasks">Remove all tasks</button>
+        class="add-task"
+        >Add task
+        </button>
+
+        <button
+        v-on:click="removeAllTasks" 
+        class="remove-tasks"
+        >Remove all tasks</button>
+
     </div>
 </template>
 
@@ -18,14 +30,22 @@
         methods: {
             addTask() {
                 let title = document.querySelector(".task-title"),
-                    desc = document.querySelector(".task-desc")
-
-                this.$emit('add-task', {
+                    desc = document.querySelector(".task-desc"),
+                    validation = document.querySelector(".validation")
+                if (title.value == "") {
+                    title.style.border = "1px solid red"
+                    validation.classList.remove("hide")
+                    //Проверка не пустой ли инпут
+                } else {
+                    title.style.border = "1px solid transparent"
+                    validation.classList.add("hide")
+                    this.$emit('add-task', {
                     title: title.value,
                     desc: desc.value,
-                    isCompleted: false,
-                    date: new Date()
-                });
+                    isCompleted: false, //Инициализируем свойство завершенности задачи, с помощью которой будем прописывать классы в css
+                    date: new Date() //Инициализация свойства для сортировки по дате в дальнейшем
+                    });
+                }
 
                 title.value = ""
                 desc.value = ""
@@ -40,6 +60,19 @@
 <style>
 p {
     margin: 0;
+}
+.task-title {
+    border: 1px solid transparent;
+}
+.validation {
+    font-size: 14px;
+    text-align: left;
+    padding-left: 30px;
+    margin-top: 5px;
+    color: red;
+}
+.validation.hide {
+    display: none;
 }
 .new-task {
     box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.25);
@@ -66,6 +99,8 @@ input {
     box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.25);
     border-radius: 5px;
     padding: 10px;
+    outline: none;
+    transition: border .2s;
 }
 .add-task, .remove-tasks {
     color: #fff;
