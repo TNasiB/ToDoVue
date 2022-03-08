@@ -2,11 +2,13 @@
     <div class="new-task">
         <p class="input-name">Todo list on Vue.js</p>
         <p class="title-name">Title</p>
-        <input type="text" class="task-title">
+        <input type="text" class="task-title" v-on:keyup.enter="addTask">
         <p class="desc-name">Description</p>
-        <input type="text" class="task-desc">
-        <button v-on:click="addTask()" class="add-task">Add task</button>
-        <button class="remove-tasks">Remove all tasks</button>
+        <input type="text" class="task-desc" v-on:keyup.enter="addTask">
+        <button 
+        v-on:click="addTask()" 
+        class="add-task">Add task</button>
+        <button v-on:click="removeAllTasks" class="remove-tasks">Remove all tasks</button>
     </div>
 </template>
 
@@ -20,8 +22,16 @@
 
                 this.$emit('add-task', {
                     title: title.value,
-                    desc: desc.value
+                    desc: desc.value,
+                    isCompleted: false,
+                    date: new Date()
                 });
+
+                title.value = ""
+                desc.value = ""
+            },
+            removeAllTasks() {
+                this.$emit('delete-all-tasks')
             }
         }
     }

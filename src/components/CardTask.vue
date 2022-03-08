@@ -1,16 +1,22 @@
 <template>
-<div class="task">
+<div class="task" v-bind:class="{completedStyle: task.isCompleted}">
     <div class="task-bar">
         <div class="task-left">
             <p>{{ task.title }}</p>
-            <button class="task-show"></button>
+            <button @click="showDesc" class="task-show"></button>
         </div>
         <div class="task-right">
-            <button class="done-task">Done!</button>
-            <button v-on:click="removeTask" class="remove-task"></button>
+
+            <button 
+            v-on:click="compleateTask"
+            class="done-task"
+            v-bind:class="{doneBtn: task.isCompleted}"
+            >Done!</button>
+
+            <button class="remove-task" @click="removeTask"></button>
         </div>
     </div>
-    <ul class="task-side">
+    <ul class="task-side hide">
         <li>{{ task.desc }}</li>
     </ul>
 </div>
@@ -19,17 +25,23 @@
 <script>
     export default {
         name: 'CardTask',
-        props: ['task'],
+        props: {
+            task: {type: Object},
+            index: {type: Number},
+        },
         methods: {
-            removeTask: function (e) {
-                e.target.parentElement.parentElement.parentElement.remove()
-                // this.$emit('remove-task', {
-
-                // });
+            removeTask() {
+                this.$emit('remove-task', this.task)
+            },
+            showDesc(e) {
+                e.target.parentElement.parentElement.parentElement.children[1].classList.toggle("hide")
+                // Переписать с делегированием
+            },
+            compleateTask() {
+                this.$emit('compleate-task', this.task, this.index)
             }
         }
     }
-
 </script>
 
 <style>
@@ -49,6 +61,9 @@
     text-align: left;
     margin-top: 7px;
     font-size: 14px;
+}
+.hide {
+    display: none;
 }
 .task-left {
     display: flex;
@@ -76,6 +91,11 @@
     color: #fff;
     font-weight: 700;
     box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.25);
+    transition: background .2s, color .2s;
+}
+.done-task:hover {
+    background-color: #fff;
+    color: rgba(24, 160, 251, 0.7);
 }
 .remove-task {
     background: url(../assets/close.svg) no-repeat;
@@ -86,8 +106,9 @@
     margin-left: 7px;
     padding: 15px;
     border-radius: 50%;
+    transition: background .2s;
 }
 .remove-task:hover {
-    background-color: rgba(221, 75, 57, 0.7);;
+    background-color: rgba(221, 75, 57, 0.7);
 }
 </style>
