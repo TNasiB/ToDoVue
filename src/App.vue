@@ -1,9 +1,13 @@
 <template>
   <div id="app">
+    <!-- Не уверен насчет чистоты кода, 
+    использовал стилистику описания компонентов с большим количеством атрибутов через строчку -->
     <AddTask 
     @add-task="saveNewTask"
     @delete-all-tasks="removeAllTasks"
-    ></AddTask>
+    >
+    </AddTask>
+
     <div class="cards-wrapper">
         <div class="need">
             <div class="need-title__wrapper">
@@ -18,7 +22,8 @@
                   type="text" 
                   class="search-input" 
                   placeholder="Enter title of task for find it" 
-                  v-on:keyup.enter="findTask">
+                  v-on:keyup.enter="findTask"
+                  >
 
                   <button class="search-btn" v-on:click="findTask"></button>
                 </div>
@@ -31,7 +36,9 @@
                :index="index" 
                @remove-task="removeTask"
                @compleate-task="compleateTask(task)"
-               ></CardTask>
+               >
+               </CardTask>
+               <!-- Вывод массива с незавершенными задачами -->
             </div>
             <div class="completed-tasks">
               <CardTask
@@ -42,6 +49,9 @@
               @compleate-task="compleateTask(task)"
               @remove-task="removeTask"
               ></CardTask>
+              <!-- Соответственно вывод массива с завершенными задачами, разница 
+              лишь в том, по какому массиву прогоняется v-for,
+               если есть вариант уменьшить дублирующий код, буду рад узнать как -->
             </div>
         </div>
     </div>
@@ -95,17 +105,32 @@
       findTask() {
         let queryItem = document.querySelector(".search-input")
         let query = queryItem.value
-        let generalTasks = this.tasks.concat(this.completedTasks)
-        let neededTask = generalTasks.find(task => task.title == query)
-        alert(`
-        Search results
-        Name of task:${neededTask.title}
-        Description of task${neededTask.desc}
-        ${neededTask.isCompleted ? 'Task completed' : 'Task active'}
-        `)
-        queryItem.value = ""
+        // Хотел сделать свое модальное окно, но времени было мало, поэтому все через алерты
+        if (query == "") { 
+          // Проверка не пустой ли был запрос
+          alert("You didn't type find query, please check field of find")
+        } else {
+          let generalTasks = this.tasks.concat(this.completedTasks)
+          let neededTask = generalTasks.find(task => task.title == query)
+
+          if (neededTask === undefined) {
+            // Проверяю, получилось ли найти что либо по запросу
+            alert("This task was not found")
+          } else {
+            // В случае, если все в порядке, вывожу результат
+            alert(`
+            Search results
+            -----------------
+            Name of task: ${neededTask.title}
+            Description of task: ${neededTask.desc}
+            ${neededTask.isCompleted ? 'Task completed' : 'Task active'}
+            `)
+          }
+          queryItem.value = ""
+        }
       },
       sortByDate() {
+        // Сортировал с помощью встроенного объекта Date
         this.tasks.sort((a, b) => a.date > b.date ? -1 : 1)
         this.completedTasks.sort((a, b) => a.date > b.date ? -1 : 1)
       }

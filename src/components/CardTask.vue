@@ -1,9 +1,9 @@
 <template>
-<div class="task" v-bind:class="{completedStyle: task.isCompleted}">
+<div class="task" @click="showDesc" v-bind:class="{completedStyle: task.isCompleted}">
     <div class="task-bar">
         <div class="task-left">
             <p>{{ task.title }}</p>
-            <button @click="showDesc" class="task-show"></button>
+            <button class="task-show"></button>
         </div>
         <div class="task-right">
 
@@ -35,7 +35,6 @@
             },
             showDesc(e) {
                 e.target.parentElement.parentElement.parentElement.children[1].classList.toggle("hide")
-                // Переписать с делегированием
             },
             compleateTask() {
                 this.$emit('compleate-task', this.task, this.index)
