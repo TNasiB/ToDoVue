@@ -31,8 +31,7 @@
                :index="index" 
                @remove-task="removeTask"
                @compleate-task="compleateTask(task)"
-               >
-              </CardTask>
+               ></CardTask>
             </div>
             <div class="completed-tasks">
               <CardTask
@@ -70,6 +69,7 @@
     methods: {
       saveNewTask(data) {
         this.tasks.push(data)
+        console.log(data)
       },
       removeTask(data) {
         if (data.isCompleted) {
@@ -87,13 +87,14 @@
           this.tasks = this.tasks.filter(item => item !== task)
         }
         task.isCompleted = !task.isCompleted
-        console.log(task.isCompleted)
       },
       removeAllTasks() {
         this.tasks = []
+        this.completedTasks = []
       },
       findTask() {
-        let query = document.querySelector(".search-input").value
+        let queryItem = document.querySelector(".search-input")
+        let query = queryItem.value
         let generalTasks = this.tasks.concat(this.completedTasks)
         let neededTask = generalTasks.find(task => task.title == query)
         alert(`
@@ -102,9 +103,11 @@
         Description of task${neededTask.desc}
         ${neededTask.isCompleted ? 'Task completed' : 'Task active'}
         `)
+        queryItem.value = ""
       },
       sortByDate() {
-        console.log(1)
+        this.tasks.sort((a, b) => a.date > b.date ? -1 : 1)
+        this.completedTasks.sort((a, b) => a.date > b.date ? -1 : 1)
       }
     }
   }
@@ -130,7 +133,8 @@
     background-color: #fff;
 }
 .completedStyle {
-    background-color: rgb(233, 233, 233);
+    /* background-color: rgb(233, 233, 233); */
+    opacity: 0.2;
 }
 .need-title-top {
     display: flex;
@@ -150,7 +154,6 @@
   border: none;
   background: rgba(24, 160, 251);
   border-radius: 0 5px 5px 0;
-  border-left: 1px solid #00000059;
   background-image: url(./assets/search.png);
   background-size: 22px;
   background-repeat: no-repeat;
@@ -165,14 +168,13 @@
   flex-direction: row;
   box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.25);
   border-radius: 5px;
-  border: 1px solid #00000059;
   margin-top: 10px;
 }
 .cards-wrapper {
     width: 450px;
     margin: 0 auto;
     margin-top: 30px;
-    border-radius: 10px;
+    border-radius: 10px 10px 0 0;
     box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.25);
 }
 .need + .done {
